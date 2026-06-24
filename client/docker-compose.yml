@@ -1,0 +1,19 @@
+services:
+  backend:
+    build:
+      context: ./dummy-backend
+    container_name: ticket-analyzer-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: ticket-analyzer-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "3000:80"
