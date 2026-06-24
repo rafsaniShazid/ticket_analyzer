@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-ticket_db}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -18,11 +18,9 @@ services:
       - ticket_analyzer
 
   backend:
-    image: ${DOCKERHUB_USERNAME:-local}/ticket-analyzer-backend:${IMAGE_TAG:-dev}
-    build:
-      context: ./backend
+    image: ${DOCKERHUB_USERNAME:-your-dockerhub-username}/ticket-analyzer-backend:${IMAGE_TAG:-v1}
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/ticket_db}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://postgres:change-me@db:5432/ticket_db}
       MODEL_NAME: ${MODEL_NAME:-distilbert-base-uncased-finetuned-sst-2-english}
       SENTIMENT_MODEL: ${SENTIMENT_MODEL:-distilbert-base-uncased-finetuned-sst-2-english}
       HF_HOME: ${HF_HOME:-/opt/hf-cache}
@@ -30,8 +28,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "${BACKEND_PORT:-8000}:8000"
     healthcheck:
       test:
         [
@@ -49,11 +45,7 @@ services:
       - ticket_analyzer
 
   frontend:
-    image: ${DOCKERHUB_USERNAME:-local}/ticket-analyzer-frontend:${IMAGE_TAG:-dev}
-    build:
-      context: ./frontend
-      args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+    image: ${DOCKERHUB_USERNAME:-your-dockerhub-username}/ticket-analyzer-frontend:${IMAGE_TAG:-v1}
     depends_on:
       backend:
         condition: service_healthy
