@@ -24,8 +24,8 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/ticket_db}
       MODEL_NAME: ${MODEL_NAME:-distilbert-base-uncased-finetuned-sst-2-english}
-      SENTIMENT_MODEL: ${SENTIMENT_MODEL:-distilbert-base-uncased-finetuned-sst-2-english}
-      HF_HOME: ${HF_HOME:-/opt/hf-cache}
+      SENTIMENT_MODEL: ${SENTIMENT_MODEL:-distilbert/distilbert-base-uncased-finetuned-sst-2-english}
+      HF_HOME: ${HF_HOME:-/app/.cache/huggingface}
       TRANSFORMERS_OFFLINE: ${TRANSFORMERS_OFFLINE:-1}
     depends_on:
       db:
@@ -58,7 +58,7 @@ services:
       backend:
         condition: service_healthy
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-3000}:80"
     restart: unless-stopped
     networks:
       - ticket_analyzer
